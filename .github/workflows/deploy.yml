@@ -1,0 +1,78 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  GCP_REGION: europe-west1
+  SERVICE_NAME: crud-api-service
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Récupération du code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Extraction de la version depuis le tag
+      - name: Extract version
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Deploying version: $VERSION"
+
+      # 3. Connexion à Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 4. Build et push de l'image API
+      - name: Build and push API image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/crud-api:${{ steps.version.outputs.VERSION }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/crud-api:${{ steps.version.outputs.VERSION }}
+          
+          docker tag ${{ secrets.DOCKER_USERNAME }}/crud-api:${{ steps.version.outputs.VERSION }} \
+            ${{ secrets.DOCKER_USERNAME }}/crud-api:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/crud-api:latest
+
+      # 5. Configuration du SDK Google Cloud
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      # 6. Activer l'API Cloud Run (au cas où)
+      - name: Enable Cloud Run API
+        run: |
+          gcloud services enable run.googleapis.com
+
+      # 7. Déploiement sur Cloud Run
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image=${{ secrets.DOCKER_USERNAME }}/crud-api:${{ steps.version.outputs.VERSION }} \
+            --region=${{ env.GCP_REGION }} \
+            --platform=managed \
+            --allow-unauthenticated \
+            --add-cloudsql-instances=${{ secrets.GCP_PROJECT_ID }}:${{ env.GCP_REGION }}:mon-instance-mysql \
+            --set-env-vars="PORT=8080,DB_HOST=${{ secrets.DB_HOST }},DB_USER=${{ secrets.DB_USER }},DB_PASS=${{ secrets.DB_PASSWORD }},DB_NAME=${{ secrets.DB_NAME }},LOKI_HOST=${{ secrets.LOKI_HOST }},LOG_DIR=/var/logs/crud"
+
+      # 8. Afficher l'URL du service
+      - name: Get service URL
+        run: |
+          SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --region=${{ env.GCP_REGION }} \
+            --format='value(status.url)')
+          echo "🚀 Service deployed at: $SERVICE_URL"
+          echo "SERVICE_URL=$SERVICE_URL" >> $GITHUB_ENV
