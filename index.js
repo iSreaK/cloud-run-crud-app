@@ -57,15 +57,20 @@ app.use(morgan((tokens, req, res) => {
   });
 }, { stream: accessLogStream }));
 
-const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASS || '',
-  database: process.env.DB_NAME || 'crud_app',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-};
+const dbConfig = process.env.DB_HOST && process.env.DB_HOST.startsWith('/cloudsql/')
+  ? {
+      socketPath: process.env.DB_HOST,  // Pour Cloud SQL via socket Unix
+      user: process.env.DB_USER || 'root',
+      password: process.env.DB_PASS || 'password',
+      database: process.env.DB_NAME || 'crud_app'
+    }
+  : {
+      host: process.env.DB_HOST || 'localhost',  // Pour local/Docker
+      user: process.env.DB_USER || 'root',
+      password: process.env.DB_PASS || 'password',
+      database: process.env.DB_NAME || 'crud_app'
+    };
+
 
 let pool;
 
