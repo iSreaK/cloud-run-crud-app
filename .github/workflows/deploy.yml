@@ -61,6 +61,7 @@ jobs:
             -url=jdbc:mysql://${{ secrets.DB_HOST }}:3306/${{ secrets.DB_NAME }} \
             -user=${{ secrets.DB_USER }} \
             -password=${{ secrets.DB_PASSWORD }} \
+            -baselineOnMigrate=true \
             migrate
 
       # 7. Déploiement sur Cloud Run
