@@ -205,20 +205,6 @@ Deploy to Cloud Run
 | Fluent bit | ❌ Fichiers préparés mais non utilisés |
 ---
 
-## Structure du Projet
-
-├── .github/
-│ └── workflows/
-│ └── deploy.yml # Pipeline CI/CD
-├── migrations/
-│ └── V1__create_users_table.sql # Migration Flyway
-├── index.js # API CRUD Express
-├── package.json # Dépendances Node.js
-├── Dockerfile # Image Docker
-└── README.md # Documentation
-
----
-
 ## Auteur
 
 Julien - TP Cloud 2025
