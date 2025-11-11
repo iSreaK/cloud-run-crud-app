@@ -68,14 +68,16 @@ Authentification sur Docker Hub avec les credentials stockés dans les secrets G
 
 **Commande exécutée** :
 
-`docker run --rm`
-`-v $(pwd)/migrations:/flyway/sql`
-`flyway/flyway:latest`
-`-url=jdbc:mysql://34.xxx.xxx.xxx:3306/crud_app`
-`-user=admin`
-`-password=***`
-`-baselineOnMigrate=true`
-`migrate`
+```bash
+docker run --rm
+-v $(pwd)/migrations:/flyway/sql
+flyway/flyway:latest
+-url=jdbc:mysql://34.xxx.xxx.xxx:3306/crud_app
+-user=admin
+-password=***
+-baselineOnMigrate=true
+migrate
+```
 
 **Fichier de migration** : `migrations/V1__create_users_table.sql`
 
@@ -90,12 +92,7 @@ Authentification sur Docker Hub avec les credentials stockés dans les secrets G
 
 **Commande gcloud** :
 
-`gcloud run deploy crud-api-service`
-`--image=isreak/crud-api:1.0.0`
-`--region=europe-west1`
-`--platform=managed`
-`--allow-unauthenticated`
-`--set-env-vars="DB_HOST=${{ secrets.DB_HOST }},DB_USER=${{ secrets.DB_USER }},DB_PASS=${{ secrets.DB_PASSWORD }},DB_NAME=${{ secrets.DB_NAME }}"`
+`gcloud run deploy crud-api-service --image=isreak/crud-api:1.0.0 --region=europe-west1 --platform=managed --allow-unauthenticated --set-env-vars="DB_HOST=${{ secrets.DB_HOST }},DB_USER=${{ secrets.DB_USER }},DB_PASS=${{ secrets.DB_PASSWORD }},DB_NAME=${{ secrets.DB_NAME }}"`
 
 
 **Configuration** :
@@ -128,12 +125,13 @@ Authentification sur Docker Hub avec les credentials stockés dans les secrets G
 
 ### Déclencher un déploiement
 
-`git add *`
-`git commit -m "Update API"`
-`git push origin main`
-
-`git tag v1.0.1`
-`git push origin v1.0.1`
+```bash
+git add *
+git commit -m "Update API"
+git push origin main
+git tag v1.0.1
+git push origin v1.0.1
+```
 
 
 Le workflow GitHub Actions se déclenche automatiquement au push du tag.
