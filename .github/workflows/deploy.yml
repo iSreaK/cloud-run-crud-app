@@ -67,7 +67,7 @@ jobs:
             --allow-unauthenticated \
             --quiet \
             --add-cloudsql-instances=${{ secrets.GCP_PROJECT_ID }}:${{ env.GCP_REGION }}:mon-instance-mysql \
-            --set-env-vars="PORT=8080,DB_HOST=${{ secrets.DB_HOST }},DB_USER=${{ secrets.DB_USER }},DB_PASS=${{ secrets.DB_PASSWORD }},DB_NAME=${{ secrets.DB_NAME }},LOKI_HOST=${{ secrets.LOKI_HOST }},LOG_DIR=/var/logs/crud"
+            --set-env-vars="DB_HOST=${{ secrets.DB_HOST }},DB_USER=${{ secrets.DB_USER }},DB_PASS=${{ secrets.DB_PASSWORD }},DB_NAME=${{ secrets.DB_NAME }},LOKI_HOST=${{ secrets.LOKI_HOST }},LOG_DIR=/var/logs/crud"
 
       # 8. Afficher l'URL du service
       - name: Get service URL
