@@ -202,7 +202,7 @@ Deploy to Cloud Run
 | Cloud SQL MySQL | ✅ Connecté |
 | Cloud Run | ✅ Déployé |
 | Versioning Git | ✅ Tags v* |
-
+| Fluent bit | ❌ Fichiers préparés mais non utilisés |
 ---
 
 ## Structure du Projet
