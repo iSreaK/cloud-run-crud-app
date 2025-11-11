@@ -59,7 +59,7 @@ app.use(morgan((tokens, req, res) => {
 
 const dbConfig = process.env.DB_HOST && process.env.DB_HOST.startsWith('/cloudsql/')
   ? {
-      socketPath: process.env.DB_HOST,  // Pour Cloud SQL via socket Unix
+      socketPath: process.env.DB_HOST,  // Pour Cloud SQL via Unix socket
       user: process.env.DB_USER || 'root',
       password: process.env.DB_PASS || 'password',
       database: process.env.DB_NAME || 'crud_app'
