@@ -52,10 +52,16 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      # # 6. Activer l'API Cloud Run (au cas où)
-      # - name: Enable Cloud Run API
-      #   run: |
-      #     gcloud services enable run.googleapis.com
+      # 6. Exécuter les migrations Flyway
+      - name: Run Flyway migrations
+        run: |
+          docker run --rm \
+            -v $(pwd)/migrations:/flyway/sql \
+            flyway/flyway:latest \
+            -url=jdbc:mysql://${{ secrets.DB_HOST }}:3306/${{ secrets.DB_NAME }} \
+            -user=${{ secrets.DB_USER }} \
+            -password=${{ secrets.DB_PASSWORD }} \
+            migrate
 
       # 7. Déploiement sur Cloud Run
       - name: Deploy to Cloud Run
