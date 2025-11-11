@@ -1,0 +1,64 @@
+# Node modules et dépendances
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+package-lock.json.bak
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+/var/logs/
+
+# Fichiers d'environnement (IMPORTANT - ne jamais commit les secrets!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Fichiers de cache et temporaires
+.cache
+.tmp
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Couverture de tests
+coverage/
+.nyc_output/
+*.lcov
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# IDE et éditeurs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# Docker (optionnel - à garder si tu veux ignorer des builds locaux)
+# docker-compose.override.yml
+
+# Build et dist
+dist/
+build/
+out/
+
+# Fichiers de sauvegarde
+*.bak
+*.backup
